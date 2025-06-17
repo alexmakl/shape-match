@@ -1,0 +1,77 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+public class TileSpawner : MonoBehaviour
+{
+    [SerializeField] TileCatalog tileCatalog;
+    
+    [SerializeField] GameObject tilePrefab;
+    [SerializeField] Transform spawnAreaTop;
+    [SerializeField] int columns = 8;
+    public float dropInterval = 0.05f;
+    public float tileScale = 0.4f;
+    
+    private List<GameObject> tilesPool = new List<GameObject>();
+    
+    public void Spawn(int count)
+    {
+        List<TileConfig> tiles = GenerateTiles(count);
+        StartCoroutine(SpawnTiles(tiles));
+    }
+    
+    private List<TileConfig> GenerateTiles(int totalTiles)
+    {
+        var combos = new List<TileConfig>();
+        var possibleCombos = new List<TileConfig>();
+
+        for (int s = 0; s < tileCatalog.shapes.Length; s++)
+            for (int c = 0; c < tileCatalog.colors.Length; c++)
+                for (int a = 0; a < tileCatalog.animals.Length; a++)
+                    possibleCombos.Add(new TileConfig { shapeIndex = s, colorIndex = c, animalIndex = a });
+
+        possibleCombos = possibleCombos.OrderBy(x => Random.value).ToList();
+
+        int neededCombos = totalTiles / 3;
+        for (int i = 0; i < neededCombos; i++)
+            for (int j = 0; j < 3; j++)
+                combos.Add(possibleCombos[i]);
+
+        combos = combos.OrderBy(x => Random.value).ToList();
+
+        return combos;
+    }
+
+    private IEnumerator SpawnTiles(List<TileConfig> configs)
+    {
+        Camera camera = Camera.main;
+        float cameraSize = camera.orthographicSize;
+        float spawnWidth = cameraSize * camera.aspect;
+        float spawnLeft = -spawnWidth + 0.2f;
+        float spawnRight = spawnWidth - 0.2f;
+        float tileWidth = (spawnRight - spawnLeft) / columns;
+
+        for (int i = 0; i < configs.Count; i++)
+        {
+            int column = i % columns;
+            float x = spawnLeft + column * tileWidth + tileWidth / 2f;
+            float y = camera.transform.position.y + cameraSize + 1.5f;
+
+            GameObject tileObject = Instantiate(tilePrefab, new Vector3(x, y, 0), Quaternion.identity);
+            tileObject.transform.localScale *= tileScale;
+            tileObject.transform.parent = transform;
+            
+            tilesPool.Add(tileObject);
+
+            var tile = tileObject.GetComponent<Tile>();
+            tile.Setup(
+                tileCatalog.shapes[configs[i].shapeIndex],
+                tileCatalog.colors[configs[i].colorIndex],
+                tileCatalog.animals[configs[i].animalIndex]
+            );
+
+            yield return new WaitForSeconds(dropInterval);
+        }
+    }
+}
