@@ -5,17 +5,19 @@ using UnityEngine;
 public class ActionBarController: MonoBehaviour
 {
     [SerializeField] GameManager gameManager;
+    [SerializeField] LevelManager levelManager;
     public Transform[] slotTransforms;
     public Tile[] slots;
     
     private int _maxSlots = 7;
+    private int tilesCollected = 0;
 
     private void Start()
     {
         slots = new Tile[_maxSlots];
     }
 
-    public bool AddTile(Tile tile)
+    public void AddTile(Tile tile)
     {
         int lastIndex = -1;
         for (int i = 0; i < slots.Length; i++)
@@ -43,7 +45,6 @@ public class ActionBarController: MonoBehaviour
         if (insertIndex >= _maxSlots)
         {
             gameManager.OnLose();
-            return false;
         }
         
         for (int i = _maxSlots - 1; i > insertIndex; i--)
@@ -61,8 +62,6 @@ public class ActionBarController: MonoBehaviour
         {
             CheckTriplets();
         }));
-
-        return true;
     }
 
     private void CheckTriplets()
@@ -113,5 +112,7 @@ public class ActionBarController: MonoBehaviour
                 slots[i - count].StartCoroutine(slots[i - count].MoveTo(true, slotTransforms[i - count].position));
             slots[i] = null;
         }
+        tilesCollected += count;
+        levelManager.UnfreezeIfPossible(tilesCollected);
     }
 }

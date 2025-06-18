@@ -104,12 +104,28 @@ public class TileSpawner : MonoBehaviour
             GameObject tileObject = Instantiate(tilePrefab, new Vector3(x, y, 0), Quaternion.identity);
             tileObject.transform.localScale *= tileScale;
             tileObject.transform.parent = transform;
+
+            SpecialType specialType;
+            int specialTypeCondition = i % 9;
+            switch (specialTypeCondition)
+            {
+                case 0:
+                    specialType = SpecialType.Frozen;
+                    break;
+                case 5:
+                    specialType = SpecialType.Heavy;
+                    break;
+                default:
+                    specialType = SpecialType.None;
+                    break;
+            }
             
             Tile tile = tileObject.GetComponent<Tile>();
             tile.Setup(
                 tileCatalog.shapes[configs[i].shapeIndex],
                 tileCatalog.colors[configs[i].colorIndex],
                 tileCatalog.animals[configs[i].animalIndex],
+                specialType,
                 this,
                 gameManager.actionBarController
             );
@@ -124,24 +140,27 @@ public class TileSpawner : MonoBehaviour
 
     private IEnumerator WaitAllTilesDropped()
     {
-        float velocityThreshold = 0.1f;
+        GameObject last = _tilesPool[_tilesPool.Count - 1];
         
         while (true)
         {
-            bool allStopped = true;
-            foreach (var tile in _tilesPool)
-            {
-                Rigidbody2D rb = tile.GetComponent<Rigidbody2D>();
-                if (rb != null && Mathf.Abs(rb.velocity.y) > velocityThreshold)
-                {
-                    allStopped = false;
-                    break;
-                }
-            }
-            if (allStopped) break;
+            if (last.transform.position.y < 3f)
+                break;
             yield return null;
         }
 
         gameManager.ChangeState(GameState.PlayerInput);
+    }
+
+    public void UnfreezeAll()
+    {
+        foreach (GameObject o in _tilesPool)
+        {
+            Tile tile = o.GetComponent<Tile>();
+            if (tile.specialType == SpecialType.Frozen)
+            {
+                tile.Unfreeze();
+            }
+        }
     }
 }

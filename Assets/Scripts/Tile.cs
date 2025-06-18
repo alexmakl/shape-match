@@ -1,13 +1,22 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
+
+public enum SpecialType
+{
+    None,
+    Heavy,
+    Frozen
+}
 
 public class Tile : MonoBehaviour
 {
     public bool canClick = false;
     
-    [SerializeField] Rigidbody2D rigidbody2D;
+    [SerializeField] new Rigidbody2D rigidbody2D;
     [SerializeField] float movementSpeed = 5f;
     [SerializeField] GameObject explosion;
+    [SerializeField] GameObject specialTypeGO;
     
     public SpriteRenderer shapeRenderer;
     public SpriteRenderer colorRenderer;
@@ -17,10 +26,19 @@ public class Tile : MonoBehaviour
     public Color color;
     public Sprite animal;
     
+    public SpecialType specialType;
+    public bool isFrozen = false;
+    
     private TileSpawner _spawner;
     private ActionBarController _actionBarController;
     
-    public void Setup(Sprite shape, Color color, Sprite animal, TileSpawner spawner, ActionBarController actionBarController)
+    public void Setup(
+        Sprite shape, 
+        Color color, 
+        Sprite animal, 
+        SpecialType specialType, 
+        TileSpawner spawner, 
+        ActionBarController actionBarController)
     {
         shapeRenderer.sprite = shape;
         colorRenderer.sprite = shape;
@@ -33,6 +51,19 @@ public class Tile : MonoBehaviour
         this.shape = shape;
         this.color = color;
         this.animal = animal;
+        this.specialType = specialType;
+
+        switch (specialType)
+        {
+            case SpecialType.Heavy:
+                rigidbody2D.gravityScale = 3f;
+                gameObject.GetComponentInChildren<SpriteRenderer>().color = Color.gray;
+                break;
+            case SpecialType.Frozen:
+                specialTypeGO.SetActive(true);
+                isFrozen = true;
+                break;
+        } 
     }
 
     public bool IsSameType(Tile tile)
@@ -67,6 +98,12 @@ public class Tile : MonoBehaviour
         StartCoroutine(ExplosionThenDestroy());
     }
 
+    public void Unfreeze()
+    {
+        isFrozen = false;
+        specialTypeGO.SetActive(false);
+    }
+
     private IEnumerator ExplosionThenDestroy()
     {
         explosion.SetActive(true);
@@ -81,7 +118,7 @@ public class Tile : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (!canClick) return;
+        if (!canClick || isFrozen) return;
         _actionBarController.AddTile(this);
     }
 }
