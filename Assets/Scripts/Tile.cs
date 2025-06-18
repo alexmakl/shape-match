@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Tile : MonoBehaviour
 {
@@ -8,6 +7,7 @@ public class Tile : MonoBehaviour
     
     [SerializeField] Rigidbody2D rigidbody2D;
     [SerializeField] float movementSpeed = 5f;
+    [SerializeField] GameObject explosion;
     
     public SpriteRenderer shapeRenderer;
     public SpriteRenderer colorRenderer;
@@ -38,13 +38,12 @@ public class Tile : MonoBehaviour
         return tile.shape == shape && tile.color == color && tile.animal == animal;
     }
 
-    public void MoveTo(Vector3 position)
+    public IEnumerator MoveTo(bool startDelay, Vector3 target, System.Action onComplete = null)
     {
-        StartCoroutine(MoveAnimation(position));
-    }
-
-    private IEnumerator MoveAnimation(Vector3 target)
-    {
+        if (startDelay)
+        {
+            yield return new WaitForSeconds(0.2f);
+        }
         rigidbody2D.simulated = false;
         float t = 0;
         Vector3 start = transform.position;
@@ -55,12 +54,26 @@ public class Tile : MonoBehaviour
             yield return null;
         }
         transform.position = target;
+        yield return new WaitForSeconds(0.1f);
+        onComplete?.Invoke();
     }
 
     public void AnimateRemove()
     {
         _spawner.RemoveTileFromPool(gameObject);
-        Destroy(gameObject, 0.2f);
+        StartCoroutine(ExplosionThenDestroy());
+    }
+
+    private IEnumerator ExplosionThenDestroy()
+    {
+        explosion.SetActive(true);
+        
+        shapeRenderer.enabled = false;
+        colorRenderer.enabled = false;
+        animalRenderer.enabled = false;
+        
+        yield return new WaitForSeconds(0.5f);
+        Destroy(gameObject);
     }
 
     private void OnMouseDown()

@@ -51,15 +51,16 @@ public class ActionBarController: MonoBehaviour
             if (slots[i - 1] != null)
             {
                 slots[i] = slots[i - 1];
-                slots[i].MoveTo(slotTransforms[i].position);
+                slots[i].StartCoroutine(slots[i].MoveTo(false, slotTransforms[i].position));
             }
         }
         
         slots[insertIndex] = tile;
         
-        tile.MoveTo(slotTransforms[insertIndex].position);
-
-        CheckTriplets();
+        tile.StartCoroutine(tile.MoveTo(false, slotTransforms[insertIndex].position, () =>
+        {
+            CheckTriplets();
+        }));
 
         return true;
     }
@@ -109,7 +110,7 @@ public class ActionBarController: MonoBehaviour
         {
             slots[i - count] = slots[i];
             if (slots[i - count] != null)
-                slots[i - count].MoveTo(slotTransforms[i - count].position);
+                slots[i - count].StartCoroutine(slots[i - count].MoveTo(true, slotTransforms[i - count].position));
             slots[i] = null;
         }
     }
