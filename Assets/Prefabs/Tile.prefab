@@ -278,14 +278,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aededdbe27b24192a87474d71aa0407, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canClick: 0
   rigidbody2D: {fileID: 6319838025535658510}
+  movementSpeed: 5
   shapeRenderer: {fileID: 8445127630311705975}
   colorRenderer: {fileID: 2443468899277555770}
   animalRenderer: {fileID: 4453669033768316070}
   shape: {fileID: 0}
   color: {r: 0, g: 0, b: 0, a: 0}
   animal: {fileID: 0}
-  speed: 5
 --- !u!1 &9004842410887527544
 GameObject:
   m_ObjectHideFlags: 0

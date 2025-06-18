@@ -11,38 +11,55 @@ public class TileSpawner : MonoBehaviour
     [SerializeField] int columns = 1;
     public float dropInterval = 0.05f;
     public float tileScale = 0.35f;
-    
-    private List<GameObject> tilesPool = new List<GameObject>();
+    [SerializeField] GameManager gameManager;
+
+    private List<GameObject> _tilesPool = new List<GameObject>();
     
     public void Spawn(int count)
     {
+        if (_tilesPool.Count > 0)
+        {
+            foreach (GameObject o in _tilesPool)
+            {
+                Destroy(o);
+            }
+            _tilesPool.Clear();
+        }
+        
         List<TileConfig> tiles = GenerateTiles(count);
         StartCoroutine(SpawnTiles(tiles));
     }
 
     public void RespawnAll()
     {
-        int count = tilesPool.Count;
-        foreach (GameObject o in tilesPool)
-        {
-            Destroy(o);
-        }
-        tilesPool.Clear();
+        int count = _tilesPool.Count;
+        
         Spawn(count);
     }
 
     public void RemoveTileFromPool(GameObject tile)
     {
-        tilesPool.Remove(tile);
+        _tilesPool.Remove(tile);
         if (CheckTilesPoolIsEmpty())
         {
-            Debug.Log("Win");
+            gameManager.OnWin();
+        }
+    }
+
+    public void EnableAllTiles(bool enable)
+    {
+        if (_tilesPool.Count > 0)
+        {
+            foreach (GameObject o in _tilesPool)
+            {
+                o.GetComponent<Tile>().canClick = enable;
+            }
         }
     }
 
     private bool CheckTilesPoolIsEmpty()
     {
-        return tilesPool.Count == 0;
+        return _tilesPool.Count == 0;
     }
 
     private List<TileConfig> GenerateTiles(int totalTiles)
@@ -96,9 +113,34 @@ public class TileSpawner : MonoBehaviour
                 this
             );
             
-            tilesPool.Add(tileObject);
+            _tilesPool.Add(tileObject);
 
             yield return new WaitForSeconds(dropInterval);
         }
+
+        yield return StartCoroutine(WaitAllTilesDropped());
+    }
+
+    private IEnumerator WaitAllTilesDropped()
+    {
+        float velocityThreshold = 0.1f;
+        
+        while (true)
+        {
+            bool allStopped = true;
+            foreach (var tile in _tilesPool)
+            {
+                Rigidbody2D rb = tile.GetComponent<Rigidbody2D>();
+                if (rb != null && Mathf.Abs(rb.velocity.y) > velocityThreshold)
+                {
+                    allStopped = false;
+                    break;
+                }
+            }
+            if (allStopped) break;
+            yield return null;
+        }
+
+        gameManager.ChangeState(GameState.PlayerInput);
     }
 }

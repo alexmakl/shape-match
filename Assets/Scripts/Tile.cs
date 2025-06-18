@@ -4,13 +4,14 @@ using UnityEngine.Serialization;
 
 public class Tile : MonoBehaviour
 {
+    public bool canClick = false;
+    
     [SerializeField] Rigidbody2D rigidbody2D;
     [SerializeField] float movementSpeed = 5f;
     
     public SpriteRenderer shapeRenderer;
     public SpriteRenderer colorRenderer;
     public SpriteRenderer animalRenderer;
-    
     
     public Sprite shape;
     public Color color;
@@ -64,6 +65,7 @@ public class Tile : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (!canClick) return;
         FindFirstObjectByType<ActionBarController>().AddTile(this);
     }
 }

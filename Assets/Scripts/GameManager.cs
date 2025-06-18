@@ -5,16 +5,66 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] TileSpawner tileSpawner;
-    
-    // Start is called before the first frame update
+    [SerializeField] UIManager uiManager;
+    [SerializeField] LevelManager levelManager;
+
+    public GameState State { get; private set; }
+
     void Start()
     {
-        tileSpawner.Spawn(54);
+        ChangeState(GameState.GeneratingField);
+        levelManager.StartCurrentLevel();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnWin()
     {
-        
+        ChangeState(GameState.Win);
+    }
+    public void OnLose()
+    {
+        ChangeState(GameState.Lose);
+    }
+    
+    public void OnNextLevel()
+    {
+        ChangeState(GameState.GeneratingField);
+        levelManager.NextLevel();
+    }
+    
+    public void OnRestartLevel()
+    {
+        ChangeState(GameState.GeneratingField);
+        levelManager.StartCurrentLevel();
+    }
+    
+    public void ChangeState(GameState newState)
+    {
+        Debug.Log($"State change: {State} → {newState}");
+        State = newState;
+        switch (State)
+        {
+            case GameState.GeneratingField:
+                uiManager.HideAll();
+                break;
+            case GameState.PlayerInput:
+                EnablePlayerInput(true);
+                break;
+            case GameState.Animating:
+                EnablePlayerInput(false);
+                break;
+            case GameState.Win:
+                EnablePlayerInput(false);
+                uiManager.ShowWin();
+                break;
+            case GameState.Lose:
+                EnablePlayerInput(false);
+                uiManager.ShowLose();
+                break;
+        }
+    }
+
+    private void EnablePlayerInput(bool enable)
+    {
+        tileSpawner.EnableAllTiles(enable);
     }
 }

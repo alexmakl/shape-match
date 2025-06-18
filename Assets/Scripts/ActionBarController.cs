@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ActionBarController: MonoBehaviour
 {
+    [SerializeField] GameManager gameManager;
     public Transform[] slotTransforms;
     public Tile[] slots;
     
@@ -41,7 +42,7 @@ public class ActionBarController: MonoBehaviour
 
         if (insertIndex >= _maxSlots)
         {
-            Debug.Log("Game Over");
+            gameManager.OnLose();
             return false;
         }
         
@@ -84,7 +85,7 @@ public class ActionBarController: MonoBehaviour
 
         if (actionBarIsFull)
         {
-            Debug.Log("Game Over");
+            gameManager.OnLose();
         }
     }
 
