@@ -8,10 +8,9 @@ public class TileSpawner : MonoBehaviour
     [SerializeField] TileCatalog tileCatalog;
     
     [SerializeField] GameObject tilePrefab;
-    [SerializeField] Transform spawnAreaTop;
-    [SerializeField] int columns = 8;
+    [SerializeField] int columns = 1;
     public float dropInterval = 0.05f;
-    public float tileScale = 0.4f;
+    public float tileScale = 0.35f;
     
     private List<GameObject> tilesPool = new List<GameObject>();
     
@@ -20,7 +19,32 @@ public class TileSpawner : MonoBehaviour
         List<TileConfig> tiles = GenerateTiles(count);
         StartCoroutine(SpawnTiles(tiles));
     }
-    
+
+    public void RespawnAll()
+    {
+        int count = tilesPool.Count;
+        foreach (GameObject o in tilesPool)
+        {
+            Destroy(o);
+        }
+        tilesPool.Clear();
+        Spawn(count);
+    }
+
+    public void RemoveTileFromPool(GameObject tile)
+    {
+        tilesPool.Remove(tile);
+        if (CheckTilesPoolIsEmpty())
+        {
+            Debug.Log("Win");
+        }
+    }
+
+    private bool CheckTilesPoolIsEmpty()
+    {
+        return tilesPool.Count == 0;
+    }
+
     private List<TileConfig> GenerateTiles(int totalTiles)
     {
         var combos = new List<TileConfig>();
@@ -51,25 +75,28 @@ public class TileSpawner : MonoBehaviour
         float spawnLeft = -spawnWidth + 0.2f;
         float spawnRight = spawnWidth - 0.2f;
         float tileWidth = (spawnRight - spawnLeft) / columns;
+        float spawnYstart = camera.transform.position.y + cameraSize + 1.5f;
 
         for (int i = 0; i < configs.Count; i++)
         {
             int column = i % columns;
-            float x = spawnLeft + column * tileWidth + tileWidth / 2f;
-            float y = camera.transform.position.y + cameraSize + 1.5f;
+            int row = i / columns;
+            float x = spawnLeft + column * tileWidth + tileWidth / 2f + Random.Range(-0.1f, 0.1f);
+            float y = spawnYstart + row * (tileScale + 0.2f);
 
             GameObject tileObject = Instantiate(tilePrefab, new Vector3(x, y, 0), Quaternion.identity);
             tileObject.transform.localScale *= tileScale;
             tileObject.transform.parent = transform;
             
-            tilesPool.Add(tileObject);
-
-            var tile = tileObject.GetComponent<Tile>();
+            Tile tile = tileObject.GetComponent<Tile>();
             tile.Setup(
                 tileCatalog.shapes[configs[i].shapeIndex],
                 tileCatalog.colors[configs[i].colorIndex],
-                tileCatalog.animals[configs[i].animalIndex]
+                tileCatalog.animals[configs[i].animalIndex],
+                this
             );
+            
+            tilesPool.Add(tileObject);
 
             yield return new WaitForSeconds(dropInterval);
         }

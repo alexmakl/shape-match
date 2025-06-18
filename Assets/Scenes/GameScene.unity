@@ -203,7 +203,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 60556323}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1598580278}
+        m_TargetAssemblyTypeName: TileSpawner, Assembly-CSharp
+        m_MethodName: RespawnAll
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &60556323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -802,6 +814,7 @@ GameObject:
   - component: {fileID: 784799225}
   - component: {fileID: 784799224}
   - component: {fileID: 784799223}
+  - component: {fileID: 784799226}
   m_Layer: 5
   m_Name: ActionBar
   m_TagString: Untagged
@@ -899,81 +912,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 784799221}
   m_CullTransparentMesh: 1
---- !u!1 &833625133
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 833625134}
-  - component: {fileID: 833625136}
-  - component: {fileID: 833625135}
-  m_Layer: 5
-  m_Name: GameFieldArea
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &833625134
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 833625133}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 889010070}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -90}
-  m_SizeDelta: {x: -80, y: 1000}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &833625135
+--- !u!114 &784799226
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 833625133}
+  m_GameObject: {fileID: 784799221}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: e95ca5dceb404e61adba0f1dfdfa0d27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.22745098}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &833625136
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 833625133}
-  m_CullTransparentMesh: 1
+  maxSlots: 7
+  slotTransforms:
+  - {fileID: 344996105225858743}
+  - {fileID: 969221470}
+  - {fileID: 1870549039}
+  - {fileID: 2016608443}
+  - {fileID: 712760358}
+  - {fileID: 1551981962}
+  - {fileID: 582401432}
+  slots: []
 --- !u!1 &889010069
 GameObject:
   m_ObjectHideFlags: 0
@@ -1005,7 +965,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1470338118}
-  - {fileID: 833625134}
   - {fileID: 60556321}
   m_Father: {fileID: 1293324661}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1586,9 +1545,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileCatalog: {fileID: 11400000, guid: f4fcb190ef7ca4b15bf0a0cea387b409, type: 2}
   tilePrefab: {fileID: 8591212128283732338, guid: 5bfbbecf22e524e08b48dbf2e4c21a20, type: 3}
-  spawnAreaTop: {fileID: 1832527531}
-  columns: 8
-  dropInterval: 0.05
+  columns: 1
+  dropInterval: 0.01
+  tileScale: 0.35
 --- !u!1 &1781178572
 GameObject:
   m_ObjectHideFlags: 0
@@ -1629,37 +1588,6 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1832527530
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1832527531}
-  m_Layer: 0
-  m_Name: TileSpawnPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1832527531
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1832527530}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2269,5 +2197,4 @@ SceneRoots:
   - {fileID: 1041510284}
   - {fileID: 1781178574}
   - {fileID: 1598580277}
-  - {fileID: 1832527531}
   - {fileID: 212288022}
