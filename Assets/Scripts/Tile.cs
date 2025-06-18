@@ -18,15 +18,17 @@ public class Tile : MonoBehaviour
     public Sprite animal;
     
     private TileSpawner _spawner;
+    private ActionBarController _actionBarController;
     
-    public void Setup(Sprite shape, Color color, Sprite animal, TileSpawner spawner)
+    public void Setup(Sprite shape, Color color, Sprite animal, TileSpawner spawner, ActionBarController actionBarController)
     {
         shapeRenderer.sprite = shape;
         colorRenderer.sprite = shape;
         colorRenderer.color = color;
         animalRenderer.sprite = animal;
 
-        this._spawner = spawner;
+        _spawner = spawner;
+        _actionBarController = actionBarController;
         
         this.shape = shape;
         this.color = color;
@@ -51,6 +53,7 @@ public class Tile : MonoBehaviour
         {
             t += Time.deltaTime * movementSpeed;
             transform.position = Vector3.Lerp(start, target, t);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.identity, t);
             yield return null;
         }
         transform.position = target;
@@ -79,6 +82,6 @@ public class Tile : MonoBehaviour
     private void OnMouseDown()
     {
         if (!canClick) return;
-        FindFirstObjectByType<ActionBarController>().AddTile(this);
+        _actionBarController.AddTile(this);
     }
 }

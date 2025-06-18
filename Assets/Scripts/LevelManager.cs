@@ -5,6 +5,7 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     [SerializeField] TileSpawner tileSpawner;
+    [SerializeField] int tilesToSpawn = 54;
     
     private int _currentLevel = 1;
 
@@ -21,6 +22,6 @@ public class LevelManager : MonoBehaviour
     private void StartLevel(int levelNum)
     {
         _currentLevel = levelNum;
-        tileSpawner.Spawn(54);
+        tileSpawner.Spawn(tilesToSpawn);
     }
 }

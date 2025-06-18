@@ -6,14 +6,14 @@ using UnityEngine;
 public class TileSpawner : MonoBehaviour
 {
     [SerializeField] TileCatalog tileCatalog;
-    
     [SerializeField] GameObject tilePrefab;
     [SerializeField] int columns = 1;
+    [SerializeField] GameManager gameManager;
+    
     public float dropInterval = 0.05f;
     public float tileScale = 0.35f;
-    [SerializeField] GameManager gameManager;
 
-    private List<GameObject> _tilesPool = new List<GameObject>();
+    private List<GameObject> _tilesPool = new();
     
     public void Spawn(int count)
     {
@@ -110,7 +110,8 @@ public class TileSpawner : MonoBehaviour
                 tileCatalog.shapes[configs[i].shapeIndex],
                 tileCatalog.colors[configs[i].colorIndex],
                 tileCatalog.animals[configs[i].animalIndex],
-                this
+                this,
+                gameManager.actionBarController
             );
             
             _tilesPool.Add(tileObject);

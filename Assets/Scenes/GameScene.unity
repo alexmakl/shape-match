@@ -1398,7 +1398,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f94c7e6baf6734be6a2ccaec1045ace7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ce7cde33ec93e45c99aee8cd3b6f6b0f, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1490,7 +1490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.066037714, g: 0.066037714, b: 0.066037714, a: 1}
+  m_Color: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2105,6 +2105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileSpawner: {fileID: 1598580278}
+  tilesToSpawn: 54
 --- !u!4 &1233516170
 Transform:
   m_ObjectHideFlags: 0
@@ -2722,9 +2723,9 @@ MonoBehaviour:
   tileCatalog: {fileID: 11400000, guid: f4fcb190ef7ca4b15bf0a0cea387b409, type: 2}
   tilePrefab: {fileID: 8591212128283732338, guid: 5bfbbecf22e524e08b48dbf2e4c21a20, type: 3}
   columns: 1
+  gameManager: {fileID: 1781178573}
   dropInterval: 0.01
   tileScale: 0.35
-  gameManager: {fileID: 1781178573}
 --- !u!1 &1781178572
 GameObject:
   m_ObjectHideFlags: 0
@@ -2757,6 +2758,7 @@ MonoBehaviour:
   tileSpawner: {fileID: 1598580278}
   uiManager: {fileID: 962013269}
   levelManager: {fileID: 1233516169}
+  actionBarController: {fileID: 784799226}
 --- !u!4 &1781178574
 Transform:
   m_ObjectHideFlags: 0

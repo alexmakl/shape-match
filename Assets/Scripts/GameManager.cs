@@ -7,8 +7,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] TileSpawner tileSpawner;
     [SerializeField] UIManager uiManager;
     [SerializeField] LevelManager levelManager;
+    [SerializeField] public ActionBarController actionBarController;
 
-    public GameState State { get; private set; }
+    private GameState State { get; set; }
 
     void Start()
     {
@@ -39,7 +40,6 @@ public class GameManager : MonoBehaviour
     
     public void ChangeState(GameState newState)
     {
-        Debug.Log($"State change: {State} → {newState}");
         State = newState;
         switch (State)
         {
